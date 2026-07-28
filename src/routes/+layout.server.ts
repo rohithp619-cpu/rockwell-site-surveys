@@ -1,0 +1,6 @@
+import { fetchServices } from '$lib/sheets.server';
+
+export const load = async () => {
+  const services = await fetchServices();
+  return { services };
+};
