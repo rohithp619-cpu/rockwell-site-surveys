@@ -209,7 +209,7 @@
 
   <!-- Input bar -->
   <div class="border-t border-border bg-background/60 backdrop-blur-sm shrink-0">
-    <div class="mx-auto w-full max-w-3xl px-6 py-4">
+    <div class="mx-auto w-full max-w-3xl px-6 pt-4 pb-2">
       <div class="rounded-2xl border border-border bg-card shadow-[0_8px_30px_-15px_oklch(0.16_0.02_250/0.15)] focus-within:border-accent focus-within:shadow-[0_0_0_3px_oklch(0.72_0.15_55/0.15),0_20px_60px_-20px_oklch(0.16_0.02_250/0.3)] transition-[border-color,box-shadow] duration-200">
         <textarea
           bind:value={inputText}
@@ -232,6 +232,9 @@
           </button>
         </div>
       </div>
+      <p class="mt-3 pb-3 text-[10px] leading-relaxed text-muted-foreground/60 text-center max-w-2xl mx-auto">
+        You're chatting with Rockwell AI, an automated assistant that answers from our live service catalogue — it isn't a chartered engineer, and any figure or scope detail it gives you should be confirmed with our team before you rely on it for booking or safety decisions.
+      </p>
     </div>
   </div>
 </div>
