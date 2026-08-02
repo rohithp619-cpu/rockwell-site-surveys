@@ -5,12 +5,20 @@ const TTL = 60_000;
 
 let cache: { data: Service[]; ts: number } | null = null;
 
+async function fetchWithRetry(attempts = 3): Promise<string> {
+  for (let i = 0; i < attempts; i++) {
+    const res = await fetch(SHEET_CSV);
+    if (res.ok) return res.text();
+    if (i < attempts - 1) await new Promise((r) => setTimeout(r, 500 * (i + 1)));
+    else throw new Error(`Sheet fetch failed: ${res.status}`);
+  }
+  throw new Error('Sheet fetch failed');
+}
+
 export async function fetchServices(): Promise<Service[]> {
   if (cache && Date.now() - cache.ts < TTL) return cache.data;
 
-  const res = await fetch(SHEET_CSV);
-  if (!res.ok) throw new Error(`Sheet fetch failed: ${res.status}`);
-  const csv = await res.text();
+  const csv = await fetchWithRetry();
   const data = parseSheet(csv);
   cache = { data, ts: Date.now() };
   return data;
