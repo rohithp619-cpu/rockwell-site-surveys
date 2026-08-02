@@ -2,6 +2,8 @@
   import { imageFor, formatEur } from '$lib/services';
   import type { PageData } from './$types';
 
+  import SeismicPanel from '$lib/components/chat/SeismicPanel.svelte';
+
   let { data }: { data: PageData } = $props();
   let s = $derived(data.service);
   let related = $derived(
@@ -127,6 +129,57 @@
         {/each}
       </dl>
     </aside>
+  </section>
+
+  <!-- Live conditions + Ask AI -->
+  <section class="border-t border-border">
+    <div class="mx-auto max-w-[1400px] px-6 py-16 md:py-24 grid grid-cols-12 gap-10 items-start">
+
+      <!-- Left: live data panels -->
+      <div class="col-span-12 md:col-span-7">
+        <p class="text-[11px] font-mono uppercase tracking-[0.3em] text-muted-foreground">
+          <span class="text-accent">§</span> Live field conditions · {s.region}
+        </p>
+        <p class="mt-4 text-sm text-muted-foreground max-w-prose">
+          Real-time weather and seismic activity for {s.region} — updated continuously from Open-Meteo and USGS. Conditions directly affect survey scheduling and fieldwork validity.
+        </p>
+        <div class="mt-6">
+          <SeismicPanel />
+        </div>
+      </div>
+
+      <!-- Right: Ask AI CTA -->
+      <div class="col-span-12 md:col-span-5 md:pl-8 md:border-l border-border">
+        <p class="text-[11px] font-mono uppercase tracking-[0.3em] text-muted-foreground">
+          <span class="text-accent">§</span> Ask the survey desk
+        </p>
+        <h3 class="mt-6 font-serif text-3xl md:text-4xl leading-[1.1]">
+          Questions about<br />{s.name}?
+        </h3>
+        <p class="mt-5 text-sm text-muted-foreground leading-relaxed">
+          Our AI desk can explain the methodology for <span class="text-foreground font-medium">{s.id}</span>, assess how today's weather and seismic conditions affect your fieldwork window, and walk you through what the signed report covers.
+        </p>
+        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+          <a
+            href="/chat?survey={s.id}&surveyName={encodeURIComponent(s.name)}&region={encodeURIComponent(s.region)}"
+            class="inline-flex items-center justify-center gap-2.5 bg-accent text-accent-foreground px-6 py-4 rounded-full text-sm font-medium hover:brightness-105 transition-all duration-200 active:scale-[0.97]"
+          >
+            Ask AI about {s.id}
+            <span aria-hidden="true" class="text-base">→</span>
+          </a>
+          <a
+            href="/contact"
+            class="inline-flex items-center justify-center gap-2 border border-border px-6 py-4 rounded-full text-sm hover:border-foreground transition-all duration-200 active:scale-[0.97]"
+          >
+            Book this survey
+          </a>
+        </div>
+        <p class="mt-4 text-[10px] font-mono uppercase tracking-[0.22em] text-muted-foreground/60">
+          Indicative guidance only · not a substitute for a site visit
+        </p>
+      </div>
+
+    </div>
   </section>
 
   <!-- Related -->

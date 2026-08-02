@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { browser } from '$app/environment';
   import { imageFor, formatEur } from '$lib/services';
   import Reveal from '$lib/components/Reveal.svelte';
+  import DroneSurvey from '$lib/components/DroneSurvey.svelte';
 
   let { data } = $props();
 
-  const heroImg = 'https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=1920&q=80&auto=format&fit=crop';
 
   const featured = $derived(
     ['RS001', 'RS009', 'RS016', 'RS021']
@@ -16,38 +15,20 @@
   const categories = $derived(Array.from(new Set(data.services.map((s) => s.category))).sort());
   const marqueeItems = $derived([...categories, ...categories]);
 
-  const showcase = $derived([
+  const showcase = [
     {
       title: "Instruments that don't guess.",
       body: "Robotic total stations, RTK GNSS, GPR arrays and survey-grade drones — calibrated, logged and traceable on every job.",
-      img: imageFor(data.services.find((s) => s.id === 'RS016') ?? data.services[0]),
+      img: 'https://images.unsplash.com/photo-1628158088936-68ccaaa400dc?w=1200&q=80&auto=format&fit=crop',
       tone: 'bg-card',
     },
     {
       title: "Reports signed by a person.",
       body: "Every conclusion carries the name of the chartered engineer who stood on your site. No boilerplate, no anonymous templates.",
-      img: imageFor(data.services.find((s) => s.id === 'RS001') ?? data.services[0]),
+      img: 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&q=80&auto=format&fit=crop',
       tone: 'bg-secondary',
     },
-  ]);
-
-  let heroFigure: HTMLElement | undefined = $state();
-  let parallaxOffset = $state(0);
-
-  $effect(() => {
-    if (!browser) return;
-    const onScroll = () => {
-      if (!heroFigure) return;
-      requestAnimationFrame(() => {
-        const rect = heroFigure!.getBoundingClientRect();
-        const center = rect.top + rect.height / 2 - window.innerHeight / 2;
-        parallaxOffset = -center * 0.08;
-      });
-    };
-    onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  });
+  ];
 
   const stats = [
     { kpi: '30', label: 'Survey types' },
@@ -94,28 +75,10 @@
       </div>
     </div>
 
-    <figure bind:this={heroFigure} class="relative mx-auto max-w-[1280px] px-6 pb-20 md:pb-28">
-      <div class="fade-in [animation-delay:560ms] relative overflow-hidden rounded-[28px] shadow-[0_50px_120px_-60px_oklch(0.19_0.005_260/0.65)]">
-        <img
-          src={heroImg}
-          alt="Rockwell engineers running a total station and drone at a coastal Irish site at sunset"
-          width={1920}
-          height={1280}
-          style="transform: translate3d(0, {parallaxOffset * 0.35}px, 0) scale(1.08)"
-          class="w-full h-[54vh] md:h-[76vh] object-cover will-change-transform"
-        />
-        <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10 grid grid-cols-2 md:grid-cols-4 gap-5 text-primary-foreground">
-          {#each [['Location', '53.3498° N · 6.2603° W'], ['Job', 'RS009 · Topographic'], ['Crew', 'M. Ryan · C. Ó Briain'], ['Weather', '9°C · SW 12kt · clear']] as [k, v]}
-            <div>
-              <p class="text-[10px] uppercase tracking-[0.18em] opacity-60">{k}</p>
-              <p class="mt-1 text-xs md:text-sm font-medium">{v}</p>
-            </div>
-          {/each}
-        </div>
-      </div>
-    </figure>
   </section>
+
+  <!-- Drone survey animation -->
+  <DroneSurvey />
 
   <!-- Stats -->
   <section class="mx-auto max-w-[1024px] px-6 py-20 md:py-28">

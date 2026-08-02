@@ -16,13 +16,13 @@ export function formatEur(n: number) {
 }
 
 const categoryImage: Record<string, string> = {
-  'Structural Surveys': 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80&auto=format&fit=crop',
+  'Structural Surveys': 'https://images.unsplash.com/photo-1527576539890-dfa815648363?w=1200&q=80&auto=format&fit=crop',
   'Structural Inspections': 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=1200&q=80&auto=format&fit=crop',
   'Geotechnical': 'https://images.unsplash.com/photo-1541888946425-d81bb19240f5?w=1200&q=80&auto=format&fit=crop',
-  'Drone Surveys': 'https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1200&q=80&auto=format&fit=crop',
+  'Drone Surveys': 'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=1200&q=80&auto=format&fit=crop',
   'Vibration Monitoring': 'https://images.unsplash.com/photo-1517646287270-a5a9ca602e5c?w=1200&q=80&auto=format&fit=crop',
   'Geophysical Surveys': 'https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=1200&q=80&auto=format&fit=crop',
-  'Measured Surveys': 'https://images.unsplash.com/photo-1503387837-b154d5074bd2?w=1200&q=80&auto=format&fit=crop',
+  'Measured Surveys': 'https://images.unsplash.com/photo-1544984243-ec57ea16fe25?w=1200&q=80&auto=format&fit=crop',
   'Environmental': 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=1200&q=80&auto=format&fit=crop',
 };
 

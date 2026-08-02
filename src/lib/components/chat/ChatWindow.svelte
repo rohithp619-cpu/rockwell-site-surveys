@@ -2,13 +2,53 @@
   import { onMount } from 'svelte';
   import { marked } from 'marked';
   import { loadThread, saveMessages, type ChatMessage } from '$lib/chat-storage';
+  import SurveyContextBar from '$lib/components/chat/SurveyContextBar.svelte';
 
   marked.setOptions({ breaks: true });
+
+  // Suitability readout pattern: "✗ Drone · ✓ Struct · ✓ Geo"
+  const SUIT_RE = /^([✗✓⚠]) Drone · ([✗✓⚠]) Struct · ([✗✓⚠]) Geo$/m;
+
+  function suitPill(sym: string, label: string, type: 'drone' | 'struct' | 'geo'): string {
+    const color = sym === '✓' ? '#22c55e' : sym === '⚠' ? '#eab308' : '#ef4444';
+    const emoji =
+      sym === '✓'
+        ? { drone: '🛸', struct: '🏗️', geo: '⛏️' }[type]
+        : sym === '⚠'
+          ? '⚠️'
+          : { drone: '🚫', struct: '🏚️', geo: '❌' }[type];
+    return `<span style="color:${color};font-weight:600;font-family:monospace;white-space:nowrap">${emoji} ${sym} ${label}</span>`;
+  }
+
+  function renderSuitability(content: string): string {
+    return content.replace(SUIT_RE, (_, drone, struct, geo) =>
+      `<div style="display:flex;align-items:center;gap:12px;margin:6px 0;line-height:1.4">` +
+        suitPill(drone, 'Drone', 'drone') +
+        `<span style="color:var(--muted-foreground);opacity:0.5">·</span>` +
+        suitPill(struct, 'Struct', 'struct') +
+        `<span style="color:var(--muted-foreground);opacity:0.5">·</span>` +
+        suitPill(geo, 'Geo', 'geo') +
+      `</div>`
+    );
+  }
+
+  function render(content: string): string {
+    return marked(renderSuitability(content)) as string;
+  }
 
   let {
     threadId,
     initialMessage = null,
-  }: { threadId: string; initialMessage?: string | null } = $props();
+    surveyId = null,
+    surveyName = null,
+    surveyRegion = null,
+  }: {
+    threadId: string;
+    initialMessage?: string | null;
+    surveyId?: string | null;
+    surveyName?: string | null;
+    surveyRegion?: string | null;
+  } = $props();
 
   let messages = $state<ChatMessage[]>([]);
   let inputText = $state('');
@@ -53,6 +93,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           messages: messages.map((m) => ({ role: m.role, content: m.content })),
+          surveyId: surveyId ?? null,
         }),
       });
 
@@ -92,15 +133,28 @@
 </script>
 
 <div class="flex-1 flex flex-col min-h-0 overflow-hidden">
+
+  <!-- Live data bar — always visible, outside scroll, shows survey context when available -->
+  <SurveyContextBar
+    {surveyId}
+    surveyName={surveyName ?? ''}
+    region={surveyRegion ?? 'Dublin'}
+  />
+
   <!-- Conversation -->
   <div bind:this={viewport} class="flex-1 overflow-y-auto">
     <div class="mx-auto w-full max-w-3xl px-6 py-8 space-y-6">
+
       {#if messages.length === 0 && status === 'idle'}
-        <div class="text-center py-20 fade-in">
+        <div class="text-center py-10 fade-in">
           <p class="text-xs font-mono uppercase tracking-[0.3em] text-accent">Ready</p>
           <h2 class="mt-4 font-serif text-4xl">Ask the survey desk.</h2>
           <p class="mt-3 text-sm text-muted-foreground max-w-xs mx-auto">
-            Describe your site, defect, or planning requirement.
+            {#if surveyId}
+              Your brief about <strong>{surveyId}</strong> is on the way. Continue the conversation below.
+            {:else}
+              Describe your site, defect, or planning requirement.
+            {/if}
           </p>
         </div>
       {/if}
@@ -116,7 +170,7 @@
             </div>
           {:else}
             <div class="max-w-[85%] rounded-2xl rounded-tl-sm px-4 py-3 text-sm bg-card border border-border text-foreground chat-prose">
-              {@html marked(msg.content)}
+              {@html render(msg.content)}
             </div>
           {/if}
         </div>
@@ -140,7 +194,7 @@
         <div class="flex flex-col gap-1 items-start">
           <span class="text-[10px] font-mono uppercase tracking-[0.25em] text-muted-foreground px-1">Rockwell AI</span>
           <div class="max-w-[85%] bg-card border border-border rounded-2xl rounded-tl-sm px-4 py-3 text-sm chat-prose">
-            {@html marked(streaming)}<span class="inline-block w-0.5 h-[1em] bg-accent ml-0.5 animate-pulse align-middle"></span>
+            {@html render(streaming)}<span class="inline-block w-0.5 h-[1em] bg-accent ml-0.5 animate-pulse align-middle"></span>
           </div>
         </div>
       {/if}

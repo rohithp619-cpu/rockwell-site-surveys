@@ -5,7 +5,7 @@
 <footer class="mt-24 bg-card border-t border-border">
   <div class="mx-auto max-w-[1024px] px-6 py-14 grid gap-10 md:grid-cols-4 text-[13px]">
     <div class="md:col-span-2">
-      <span class="text-accent h-10 w-10 block">{@html Logo}</span>
+      <span class="h-10 w-10 block">{@html Logo}</span>
       <p class="mt-4 text-[22px] font-semibold tracking-tight leading-snug">
         Ground truth, measured.
       </p>

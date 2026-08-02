@@ -1,4 +1,41 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect x="16" y="1.5" width="20" height="20" rx="2" transform="rotate(45 16 1.5)" fill="currentColor"/>
-  <rect x="16" y="8" width="9" height="9" rx="1" transform="rotate(45 16 8)" fill="white" opacity="0.25"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!-- Outer contour ring -->
+  <circle cx="256" cy="256" r="228" stroke="#1a2840" stroke-width="14"/>
+  <!-- Mid contour ring -->
+  <circle cx="256" cy="256" r="178" stroke="#1a2840" stroke-width="8" stroke-dasharray="14 10"/>
+  <!-- Inner contour ring -->
+  <circle cx="256" cy="256" r="128" stroke="#1a2840" stroke-width="5" stroke-dasharray="8 8"/>
+
+  <!-- Crosshair — outer to ring edge -->
+  <line x1="256" y1="28" x2="256" y2="110" stroke="#1a2840" stroke-width="10" stroke-linecap="round"/>
+  <line x1="256" y1="402" x2="256" y2="484" stroke="#1a2840" stroke-width="10" stroke-linecap="round"/>
+  <line x1="28" y1="256" x2="110" y2="256" stroke="#1a2840" stroke-width="10" stroke-linecap="round"/>
+  <line x1="402" y1="256" x2="484" y2="256" stroke="#1a2840" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- Diagonal tick marks at 45° -->
+  <line x1="96" y1="96" x2="138" y2="138" stroke="#1a2840" stroke-width="6" stroke-linecap="round"/>
+  <line x1="374" y1="96" x2="416" y2="138" stroke="#1a2840" stroke-width="6" stroke-linecap="round"/>
+  <line x1="96" y1="416" x2="138" y2="374" stroke="#1a2840" stroke-width="6" stroke-linecap="round"/>
+  <line x1="374" y1="416" x2="416" y2="374" stroke="#1a2840" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Survey benchmark triangle (pointing up) -->
+  <polygon points="256,148 316,280 196,280" fill="none" stroke="#1a2840" stroke-width="12" stroke-linejoin="round"/>
+  <!-- Benchmark base hat -->
+  <line x1="182" y1="292" x2="330" y2="292" stroke="#1a2840" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Crosshair centre dot -->
+  <circle cx="256" cy="256" r="8" fill="#1a2840"/>
+
+  <!-- Letter R — bold, centred -->
+  <text
+    x="256"
+    y="270"
+    font-family="-apple-system, 'SF Pro Display', 'Inter', system-ui, sans-serif"
+    font-size="120"
+    font-weight="700"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    fill="#1a2840"
+    letter-spacing="-4"
+  >R</text>
 </svg>
