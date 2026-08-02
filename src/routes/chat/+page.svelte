@@ -74,7 +74,7 @@
 
     <!-- Input -->
     <form
-      class="mt-10 rounded-2xl border border-border bg-card shadow-[0_20px_60px_-30px_oklch(0.16_0.02_250/0.35)] focus-within:border-accent transition-colors duration-200 fade-in [animation-delay:250ms]"
+      class="mt-10 rounded-2xl border border-border bg-card shadow-[0_8px_30px_-15px_oklch(0.16_0.02_250/0.15)] focus-within:border-accent focus-within:shadow-[0_0_0_3px_oklch(0.72_0.15_55/0.15),0_20px_60px_-20px_oklch(0.16_0.02_250/0.3)] transition-[border-color,box-shadow] duration-200 fade-in [animation-delay:250ms]"
       onsubmit={(e) => { e.preventDefault(); start(draft); }}
     >
       <textarea
@@ -111,7 +111,7 @@
         {@const Icon = s.icon}
         <button
           onclick={() => start(s.prompt)}
-          class="group text-left rounded-xl border border-border bg-card p-5 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent hover:shadow-[0_18px_40px_-24px_oklch(0.72_0.15_55/0.4)] active:scale-[0.98]"
+          class="group text-left rounded-xl border border-border bg-card p-5 card-hover active:scale-[0.97] rise"
           style="animation-delay: {i * 50}ms"
         >
           <div class="flex items-start justify-between mb-4">

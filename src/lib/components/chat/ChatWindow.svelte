@@ -28,11 +28,10 @@
   });
 
   $effect(() => {
-    // track reactive dependencies
     const _ = messages.length + streaming.length;
     if (viewport) {
       requestAnimationFrame(() => {
-        if (viewport) viewport.scrollTop = viewport.scrollHeight;
+        if (viewport) viewport.scrollTo({ top: viewport.scrollHeight, behavior: 'smooth' });
       });
     }
   });
@@ -107,7 +106,7 @@
       {/if}
 
       {#each messages as msg (msg.id)}
-        <div class="flex flex-col gap-1 fade-in {msg.role === 'user' ? 'items-end' : 'items-start'}">
+        <div class="flex flex-col gap-1 msg-appear {msg.role === 'user' ? 'items-end' : 'items-start'}">
           <span class="text-[10px] font-mono uppercase tracking-[0.25em] text-muted-foreground px-1">
             {msg.role === 'user' ? 'You' : 'Rockwell AI'}
           </span>
@@ -127,10 +126,10 @@
         <div class="flex flex-col gap-1 items-start fade-in">
           <span class="text-[10px] font-mono uppercase tracking-[0.25em] text-muted-foreground px-1">Rockwell AI</span>
           <div class="bg-card border border-border rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2">
-            <span class="flex gap-1">
-              <span class="w-1.5 h-1.5 rounded-full bg-accent animate-bounce [animation-delay:0ms]"></span>
-              <span class="w-1.5 h-1.5 rounded-full bg-accent animate-bounce [animation-delay:150ms]"></span>
-              <span class="w-1.5 h-1.5 rounded-full bg-accent animate-bounce [animation-delay:300ms]"></span>
+            <span class="flex gap-1.5 items-center">
+              <span class="w-1.5 h-1.5 rounded-full bg-accent [animation:dot-pulse_1.2s_ease-in-out_infinite] [animation-delay:0ms]"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-accent [animation:dot-pulse_1.2s_ease-in-out_infinite] [animation-delay:200ms]"></span>
+              <span class="w-1.5 h-1.5 rounded-full bg-accent [animation:dot-pulse_1.2s_ease-in-out_infinite] [animation-delay:400ms]"></span>
             </span>
             <span class="text-xs font-mono uppercase tracking-[0.25em] text-muted-foreground">Consulting the drawings…</span>
           </div>
@@ -155,9 +154,9 @@
   </div>
 
   <!-- Input bar -->
-  <div class="border-t border-border bg-background/80 backdrop-blur-sm shrink-0">
+  <div class="border-t border-border bg-background/60 backdrop-blur-sm shrink-0">
     <div class="mx-auto w-full max-w-3xl px-6 py-4">
-      <div class="rounded-2xl border border-border bg-card shadow-[0_20px_60px_-30px_oklch(0.16_0.02_250/0.2)] focus-within:border-accent transition-colors duration-200">
+      <div class="rounded-2xl border border-border bg-card shadow-[0_8px_30px_-15px_oklch(0.16_0.02_250/0.15)] focus-within:border-accent focus-within:shadow-[0_0_0_3px_oklch(0.72_0.15_55/0.15),0_20px_60px_-20px_oklch(0.16_0.02_250/0.3)] transition-[border-color,box-shadow] duration-200">
         <textarea
           bind:value={inputText}
           onkeydown={handleKeyDown}
