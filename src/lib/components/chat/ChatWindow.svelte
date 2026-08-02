@@ -176,16 +176,16 @@
         </div>
       {/each}
 
-      {#if status === 'loading'}
+      {#if status === 'loading' || (status === 'streaming' && !streaming)}
         <div class="flex flex-col gap-1 items-start fade-in">
           <span class="text-[10px] font-mono uppercase tracking-[0.25em] text-muted-foreground px-1">Rockwell AI</span>
-          <div class="bg-card border border-border rounded-2xl rounded-tl-sm px-4 py-3 flex items-center gap-2">
+          <div class="bg-card border border-border rounded-2xl rounded-tl-sm px-4 py-3.5 flex items-center gap-3">
             <span class="flex gap-1.5 items-center">
               <span class="w-1.5 h-1.5 rounded-full bg-accent [animation:dot-pulse_1.2s_ease-in-out_infinite] [animation-delay:0ms]"></span>
               <span class="w-1.5 h-1.5 rounded-full bg-accent [animation:dot-pulse_1.2s_ease-in-out_infinite] [animation-delay:200ms]"></span>
               <span class="w-1.5 h-1.5 rounded-full bg-accent [animation:dot-pulse_1.2s_ease-in-out_infinite] [animation-delay:400ms]"></span>
             </span>
-            <span class="text-xs font-mono uppercase tracking-[0.25em] text-muted-foreground">Consulting the drawings…</span>
+            <span class="text-xs font-mono text-muted-foreground thinking-text">Thinking…</span>
           </div>
         </div>
       {/if}
