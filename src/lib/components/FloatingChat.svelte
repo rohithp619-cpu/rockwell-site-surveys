@@ -16,7 +16,7 @@
     href="/chat"
     onclick={markOpened}
     aria-label="Open survey desk chat"
-    class="group fixed bottom-6 right-6 z-50 inline-flex items-center gap-3 rounded-full bg-primary text-primary-foreground pl-4 pr-5 py-3 shadow-[0_20px_50px_-15px_oklch(0.16_0.02_250/0.55)] hover:bg-accent hover:text-accent-foreground transition-[transform,background-color,color,box-shadow] active:scale-[0.97] fade-in"
+    class="group pill fixed bottom-6 right-6 z-50 inline-flex items-center gap-3 bg-primary text-primary-foreground pl-3 pr-5 py-2.5 shadow-[0_24px_60px_-20px_oklch(0.19_0.005_260/0.6)] hover:bg-accent hover:text-accent-foreground fade-in"
   >
     <span class="relative flex h-9 w-9 items-center justify-center rounded-full bg-accent text-accent-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
       <MessageSquare class="h-4 w-4" />

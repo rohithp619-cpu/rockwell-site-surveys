@@ -16,25 +16,22 @@
   } = $props();
 </script>
 
-<section class="border-b border-border">
-  <div class="mx-auto max-w-[1400px] px-6 pt-16 md:pt-28 pb-14 md:pb-20 grid grid-cols-12 gap-6 items-end">
-    <div class="col-span-12 md:col-span-8 rise">
-      <div class="flex items-center gap-4 text-[11px] font-mono uppercase tracking-[0.3em] text-muted-foreground">
-        <span class="text-accent">§ {num}</span>
-        <span class="h-px w-8 bg-foreground/30"></span>
-        <span>{eyebrow}</span>
-      </div>
-      <h1 class="mt-8 font-serif text-6xl md:text-8xl lg:text-[9rem] leading-[0.92]">
-        {@render title()}
-      </h1>
-      {#if lede}
-        <p class="mt-8 max-w-xl text-base md:text-lg text-muted-foreground leading-relaxed">
-          {lede}
-        </p>
-      {/if}
-    </div>
+<section class="bg-card border-b border-border">
+  <div class="mx-auto max-w-[900px] px-6 pt-20 md:pt-28 pb-16 md:pb-20 text-center">
+    <p class="rise text-[12px] font-medium tracking-[0.02em] text-accent">
+      {eyebrow}
+      <span class="sr-only"> — section {num}</span>
+    </p>
+    <h1 class="rise [animation-delay:80ms] mt-4 text-5xl md:text-7xl">
+      {@render title()}
+    </h1>
+    {#if lede}
+      <p class="fade-in [animation-delay:220ms] mx-auto mt-6 max-w-2xl text-lg md:text-xl text-muted-foreground leading-relaxed">
+        {lede}
+      </p>
+    {/if}
     {#if meta}
-      <div class="col-span-12 md:col-span-4 md:text-right fade-in [animation-delay:200ms]">
+      <div class="fade-in [animation-delay:340ms] mt-10 flex flex-wrap justify-center gap-x-10 gap-y-6">
         {@render meta()}
       </div>
     {/if}

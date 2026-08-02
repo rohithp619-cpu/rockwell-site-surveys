@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { browser } from '$app/environment';
   import { imageFor, formatEur } from '$lib/services';
+  import Reveal from '$lib/components/Reveal.svelte';
 
   let { data } = $props();
 
@@ -13,6 +15,46 @@
 
   const categories = $derived(Array.from(new Set(data.services.map((s) => s.category))).sort());
   const marqueeItems = $derived([...categories, ...categories]);
+
+  const showcase = $derived([
+    {
+      title: "Instruments that don't guess.",
+      body: "Robotic total stations, RTK GNSS, GPR arrays and survey-grade drones — calibrated, logged and traceable on every job.",
+      img: imageFor(data.services.find((s) => s.id === 'RS016') ?? data.services[0]),
+      tone: 'bg-card',
+    },
+    {
+      title: "Reports signed by a person.",
+      body: "Every conclusion carries the name of the chartered engineer who stood on your site. No boilerplate, no anonymous templates.",
+      img: imageFor(data.services.find((s) => s.id === 'RS001') ?? data.services[0]),
+      tone: 'bg-secondary',
+    },
+  ]);
+
+  let heroFigure: HTMLElement | undefined = $state();
+  let parallaxOffset = $state(0);
+
+  $effect(() => {
+    if (!browser) return;
+    const onScroll = () => {
+      if (!heroFigure) return;
+      requestAnimationFrame(() => {
+        const rect = heroFigure!.getBoundingClientRect();
+        const center = rect.top + rect.height / 2 - window.innerHeight / 2;
+        parallaxOffset = -center * 0.08;
+      });
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  });
+
+  const stats = [
+    { kpi: '30', label: 'Survey types' },
+    { kpi: '15', label: 'Counties covered' },
+    { kpi: '27yr', label: 'Field operations' },
+    { kpi: '€13m', label: 'Professional cover' },
+  ];
 </script>
 
 <svelte:head>
@@ -20,71 +62,54 @@
   <meta name="description" content="Chartered engineering surveys across Ireland — structural, geotechnical, drone, geophysical. Fixed fees, signed reports, honest lead times." />
 </svelte:head>
 
-<div>
+<div class="overflow-x-clip">
+
   <!-- Hero -->
-  <section class="relative border-b border-border overflow-hidden">
-    <div class="mx-auto max-w-[1400px] px-6 pt-14 md:pt-20 pb-10 md:pb-16 grid grid-cols-12 gap-6">
-      <div class="col-span-12 md:col-span-8 rise">
-        <div class="flex items-center gap-4 text-[11px] font-mono uppercase tracking-[0.3em] text-muted-foreground">
-          <span class="text-accent">§ 00 — Index</span>
-          <span class="h-px w-10 bg-foreground/30"></span>
-          <span>Est. 1998 · Chartered Engineers · Ireland</span>
-        </div>
-        <h1 class="mt-8 font-serif leading-[0.9] text-[15vw] md:text-[10rem] lg:text-[13rem] tracking-[-0.03em]">
-          Ground<br />
-          truth,<br />
-          <em class="not-italic text-accent">measured.</em>
-        </h1>
+  <section class="relative bg-card">
+    <div
+      class="pointer-events-none absolute inset-x-0 -top-24 h-[420px] blur-3xl opacity-60 float-slow"
+      style="background: radial-gradient(45% 60% at 30% 40%, color-mix(in oklab, var(--accent) 22%, transparent), transparent 70%), radial-gradient(40% 55% at 72% 35%, color-mix(in oklab, var(--moss) 18%, transparent), transparent 70%)"
+    ></div>
+
+    <div class="relative mx-auto max-w-[900px] px-6 pt-24 md:pt-32 pb-12 text-center">
+      <p class="rise text-[13px] font-medium text-accent">
+        Chartered engineers · Ireland · Since 1998
+      </p>
+      <h1 class="rise [animation-delay:100ms] mt-5 text-[13vw] leading-[0.95] md:text-[6.5rem]">
+        Ground truth,<br />
+        <em class="text-gradient">measured.</em>
+      </h1>
+      <p class="fade-in [animation-delay:300ms] mx-auto mt-7 max-w-2xl text-lg md:text-2xl text-muted-foreground leading-relaxed">
+        Thirty specialised surveys — structural, geotechnical, drone and
+        geophysical — delivered with signed reports, fixed fees and lead times
+        we actually keep.
+      </p>
+      <div class="fade-in [animation-delay:440ms] mt-9 flex flex-wrap items-center justify-center gap-3">
+        <a href="/services" class="pill bg-accent text-accent-foreground px-7 py-3 text-[15px] font-medium">
+          Browse 30 surveys
+        </a>
+        <a href="/contact" class="pill border border-border bg-background px-7 py-3 text-[15px] font-medium hover:border-foreground/40">
+          Talk to an engineer ›
+        </a>
       </div>
-      <aside class="col-span-12 md:col-span-4 md:pl-8 md:border-l md:border-border flex flex-col justify-between fade-in [animation-delay:200ms]">
-        <p class="text-base md:text-lg text-muted-foreground leading-relaxed">
-          Rockwell is a chartered structural &amp; geotechnical practice working across Ireland — from Donegal cliffs to Cork harbour. Thirty specialised surveys. Signed reports. Honest lead times.
-        </p>
-        <dl class="mt-10 grid grid-cols-3 gap-4">
-          <div>
-            <dt class="sr-only">Survey types</dt>
-            <dd class="font-serif text-4xl leading-none">30</dd>
-            <p class="mt-1.5 text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">Survey types</p>
-          </div>
-          <div>
-            <dt class="sr-only">Counties</dt>
-            <dd class="font-serif text-4xl leading-none">15</dd>
-            <p class="mt-1.5 text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">Counties</p>
-          </div>
-          <div>
-            <dt class="sr-only">Field ops</dt>
-            <dd class="font-serif text-4xl leading-none">27yr</dd>
-            <p class="mt-1.5 text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground">Field ops</p>
-          </div>
-        </dl>
-        <div class="mt-10 flex flex-col gap-3">
-          <a href="/services" class="group inline-flex items-center justify-between gap-4 bg-primary text-primary-foreground px-5 py-4 rounded-md hover:bg-accent hover:text-accent-foreground transition-colors">
-            <span class="text-sm font-medium">Browse 30 surveys</span>
-            <span aria-hidden="true" class="font-mono transition-transform group-hover:translate-x-1">→</span>
-          </a>
-          <a href="/contact" class="group inline-flex items-center justify-between gap-4 border border-border px-5 py-4 rounded-md hover:border-foreground transition-colors">
-            <span class="text-sm font-medium">Talk to an engineer</span>
-            <span aria-hidden="true" class="font-mono">↗</span>
-          </a>
-        </div>
-      </aside>
     </div>
 
-    <figure class="relative mx-auto max-w-[1400px] px-6 pb-16 md:pb-24 fade-in [animation-delay:350ms]">
-      <div class="relative overflow-hidden rounded-md grain">
+    <figure bind:this={heroFigure} class="relative mx-auto max-w-[1280px] px-6 pb-20 md:pb-28">
+      <div class="fade-in [animation-delay:560ms] relative overflow-hidden rounded-[28px] shadow-[0_50px_120px_-60px_oklch(0.19_0.005_260/0.65)]">
         <img
           src={heroImg}
           alt="Rockwell engineers running a total station and drone at a coastal Irish site at sunset"
           width={1920}
           height={1280}
-          class="w-full h-[52vh] md:h-[72vh] object-cover"
+          style="transform: translate3d(0, {parallaxOffset * 0.35}px, 0) scale(1.08)"
+          class="w-full h-[54vh] md:h-[76vh] object-cover will-change-transform"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10 grid grid-cols-2 md:grid-cols-4 gap-4 text-white">
+        <div class="absolute inset-0 bg-gradient-to-t from-ink/70 via-ink/10 to-transparent"></div>
+        <div class="absolute bottom-0 left-0 right-0 p-6 md:p-10 grid grid-cols-2 md:grid-cols-4 gap-5 text-primary-foreground">
           {#each [['Location', '53.3498° N · 6.2603° W'], ['Job', 'RS009 · Topographic'], ['Crew', 'M. Ryan · C. Ó Briain'], ['Weather', '9°C · SW 12kt · clear']] as [k, v]}
             <div>
-              <p class="text-[10px] font-mono uppercase tracking-[0.25em] text-white/60">{k}</p>
-              <p class="mt-1 font-mono text-xs md:text-sm">{v}</p>
+              <p class="text-[10px] uppercase tracking-[0.18em] opacity-60">{k}</p>
+              <p class="mt-1 text-xs md:text-sm font-medium">{v}</p>
             </div>
           {/each}
         </div>
@@ -92,117 +117,153 @@
     </figure>
   </section>
 
+  <!-- Stats -->
+  <section class="mx-auto max-w-[1024px] px-6 py-20 md:py-28">
+    <dl class="grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-6 text-center">
+      {#each stats as stat, i}
+        <Reveal delay={i * 90}>
+          <dd class="text-5xl md:text-6xl font-semibold tracking-tight text-gradient">{stat.kpi}</dd>
+          <dt class="mt-3 text-[13px] text-muted-foreground">{stat.label}</dt>
+        </Reveal>
+      {/each}
+    </dl>
+  </section>
+
+  <!-- Showcase -->
+  <section class="mx-auto max-w-[1280px] px-6 pb-10 grid gap-6 md:grid-cols-2">
+    {#each showcase as p, i}
+      <Reveal delay={i * 120} class="group relative overflow-hidden rounded-[28px] {p.tone} border border-border">
+        <div class="p-8 md:p-12">
+          <h2 class="text-3xl md:text-[2.6rem] max-w-sm">{p.title}</h2>
+          <p class="mt-4 max-w-md text-muted-foreground leading-relaxed">{p.body}</p>
+        </div>
+        <div class="px-8 md:px-12 pb-8 md:pb-12">
+          <div class="overflow-hidden rounded-2xl">
+            <img
+              src={p.img}
+              alt={p.title}
+              loading="lazy"
+              class="h-64 w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-105"
+            />
+          </div>
+        </div>
+      </Reveal>
+    {/each}
+  </section>
+
   <!-- Marquee -->
-  <div class="border-b border-border bg-primary text-primary-foreground overflow-hidden">
-    <div class="flex whitespace-nowrap marquee-track py-6">
+  <div class="overflow-hidden border-y border-border bg-card py-8">
+    <div class="flex whitespace-nowrap marquee-track">
       {#each marqueeItems as item}
-        <span class="mx-8 font-serif text-3xl md:text-4xl flex items-center gap-8">
+        <span class="mx-6 flex items-center gap-6 text-2xl md:text-4xl font-semibold tracking-tight text-muted-foreground/50">
           {item}
-          <span aria-hidden="true" class="text-accent text-2xl">✦</span>
+          <span aria-hidden="true" class="text-accent text-lg">•</span>
         </span>
       {/each}
     </div>
   </div>
 
   <!-- Featured Grid -->
-  <section class="mx-auto max-w-[1400px] px-6 py-20 md:py-32">
-    <header class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
-      <div>
-        <p class="text-[11px] font-mono uppercase tracking-[0.3em] text-muted-foreground">
-          <span class="text-accent">§ 01</span> — Featured surveys
-        </p>
-        <h2 class="mt-4 font-serif text-5xl md:text-7xl leading-[0.95]">
-          Four of thirty,<br />
-          <em class="not-italic text-accent">chosen for you.</em>
-        </h2>
-      </div>
-      <a
-        href="/services"
-        class="self-start md:self-end inline-flex items-center gap-2 text-sm border-b border-foreground pb-1 hover:text-accent hover:border-accent transition-colors"
-      >
-        See the full catalogue →
+  <section class="mx-auto max-w-[1280px] px-6 py-20 md:py-28">
+    <Reveal class="text-center max-w-2xl mx-auto">
+      <p class="text-[13px] font-medium text-accent">Featured surveys</p>
+      <h2 class="mt-4 text-4xl md:text-6xl">Four of thirty, chosen for you.</h2>
+      <a href="/services" class="mt-6 inline-flex text-accent text-[15px] hover:underline underline-offset-4">
+        See the full catalogue ›
       </a>
-    </header>
+    </Reveal>
 
-    <div class="grid grid-cols-12 gap-6">
+    <div class="mt-14 grid grid-cols-12 gap-6">
       {#each featured as s, i}
-        <a
-          href="/services/{s.id}"
-          class="group card-hover bg-card rounded-md overflow-hidden border border-border {i === 0 ? 'col-span-12 md:col-span-8 md:row-span-2' : 'col-span-12 sm:col-span-6 md:col-span-4'}"
-        >
-          <div class="relative overflow-hidden {i === 0 ? 'aspect-[16/11]' : 'aspect-[4/3]'}">
-            <img
-              src={imageFor(s)}
-              alt={s.name}
-              loading="lazy"
-              class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            <span class="absolute top-3 left-3 bg-background/90 text-foreground px-2.5 py-1 rounded-sm text-[10px] font-mono uppercase tracking-widest">
-              {s.id}
-            </span>
-            <span class="absolute top-3 right-3 bg-accent text-accent-foreground px-2.5 py-1 rounded-sm text-[10px] font-mono uppercase tracking-widest">
-              {formatEur(s.feeEur)}
-            </span>
-          </div>
-          <div class="p-5 md:p-6">
-            <p class="text-[10px] font-mono uppercase tracking-[0.25em] text-muted-foreground">
-              {s.category} · {s.region}
-            </p>
-            <h3 class="mt-2 font-serif leading-tight {i === 0 ? 'text-3xl md:text-5xl' : 'text-2xl'}">
-              {s.name}
-            </h3>
-            {#if i === 0}
-              <p class="mt-4 text-muted-foreground max-w-lg leading-relaxed">{s.description}</p>
-            {/if}
-            <div class="mt-5 flex items-center justify-between text-xs font-mono uppercase tracking-widest">
-              <span class="text-muted-foreground">{s.durationDays}d · {s.availability}</span>
-              <span class="text-foreground group-hover:text-accent transition-colors">View →</span>
+        <Reveal delay={i * 90} class={i === 0 ? 'col-span-12 md:col-span-8' : 'col-span-12 sm:col-span-6 md:col-span-4'}>
+          <a
+            href="/services/{s.id}"
+            class="group card-hover block h-full overflow-hidden rounded-[24px] border border-border bg-card"
+          >
+            <div class="relative overflow-hidden {i === 0 ? 'aspect-[16/10]' : 'aspect-[4/3]'}">
+              <img
+                src={imageFor(s)}
+                alt={s.name}
+                loading="lazy"
+                class="h-full w-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-110"
+              />
+              <span class="absolute top-4 left-4 glass rounded-full px-3 py-1 text-[11px] font-medium">
+                {s.id}
+              </span>
+              <span class="absolute top-4 right-4 rounded-full bg-accent text-accent-foreground px-3 py-1 text-[11px] font-medium">
+                {formatEur(s.feeEur)}
+              </span>
             </div>
-          </div>
-        </a>
+            <div class="p-6 md:p-8">
+              <p class="text-[12px] text-muted-foreground">{s.category} · {s.region}</p>
+              <h3 class="mt-2 {i === 0 ? 'text-3xl md:text-4xl' : 'text-2xl'}">{s.name}</h3>
+              <p class="mt-3 max-w-lg text-[15px] text-muted-foreground leading-relaxed line-clamp-3">{s.description}</p>
+              <div class="mt-6 flex items-center justify-between text-[13px]">
+                <span class="text-muted-foreground">{s.durationDays}d · {s.availability}</span>
+                <span class="text-accent transition-transform duration-300 group-hover:translate-x-1">View ›</span>
+              </div>
+            </div>
+          </a>
+        </Reveal>
       {/each}
     </div>
   </section>
 
   <!-- Manifesto -->
-  <section class="border-y border-border bg-secondary/60">
-    <div class="mx-auto max-w-[1400px] px-6 py-24 md:py-32 grid grid-cols-12 gap-6">
-      <p class="col-span-12 md:col-span-3 text-[11px] font-mono uppercase tracking-[0.3em] text-muted-foreground">
-        <span class="text-accent">§ 02</span><br />Manifesto
-      </p>
-      <p class="col-span-12 md:col-span-9 font-serif text-3xl md:text-5xl lg:text-6xl leading-[1.05] text-foreground">
-        We survey ground the way a doctor reads a scan — <em class="not-italic text-accent">carefully, on record,</em> and with a name signed to every conclusion. No boilerplate. No hidden fees. If we can't do the job, we tell you who can.
-      </p>
+  <section class="bg-primary text-primary-foreground">
+    <div class="mx-auto max-w-[900px] px-6 py-28 md:py-40 text-center">
+      <Reveal>
+        <p class="text-[13px] font-medium text-accent">Our standard</p>
+        <p class="mt-6 text-3xl md:text-5xl leading-[1.15] font-semibold tracking-tight">
+          We survey ground the way a doctor reads a scan — carefully, on
+          record, and with a name signed to every conclusion.
+          <span class="text-primary-foreground/45">
+            No boilerplate. No hidden fees. If we can't do the job, we tell you
+            who can.
+          </span>
+        </p>
+      </Reveal>
     </div>
   </section>
 
   <!-- Big CTA -->
-  <section class="mx-auto max-w-[1400px] px-6 py-20 md:py-28">
-    <div class="grid md:grid-cols-2 gap-4">
-      <a href="/regions" class="group card-hover relative overflow-hidden rounded-md border border-border bg-card p-8 md:p-12 min-h-72 flex flex-col justify-between">
-        <p class="text-[11px] font-mono uppercase tracking-[0.3em] text-accent">Coverage</p>
-        <div>
-          <h3 class="font-serif text-4xl md:text-6xl leading-[0.95]">
-            Fifteen counties.<br /><em class="not-italic text-muted-foreground">Three yards.</em>
-          </h3>
-          <p class="mt-4 text-sm text-muted-foreground">
-            Dublin · Cork Harbour · Galway — plus rotating field crews nationwide.
-          </p>
-        </div>
-        <span class="text-sm font-mono uppercase tracking-widest group-hover:text-accent transition-colors">See regions →</span>
-      </a>
-      <a href="/process" class="group card-hover relative overflow-hidden rounded-md border border-border bg-primary text-primary-foreground p-8 md:p-12 min-h-72 flex flex-col justify-between">
-        <p class="text-[11px] font-mono uppercase tracking-[0.3em] text-accent">Workflow</p>
-        <div>
-          <h3 class="font-serif text-4xl md:text-6xl leading-[0.95]">
-            Four steps.<br /><em class="not-italic text-accent">Zero surprises.</em>
-          </h3>
-          <p class="mt-4 text-sm text-primary-foreground/70">
-            Brief → site day → signed report → follow-up. Quoted times honoured.
-          </p>
-        </div>
-        <span class="text-sm font-mono uppercase tracking-widest group-hover:text-accent transition-colors">See process →</span>
-      </a>
+  <section class="mx-auto max-w-[1280px] px-6 py-20 md:py-28">
+    <div class="grid gap-6 md:grid-cols-2">
+      <Reveal class="h-full">
+        <a
+          href="/regions"
+          class="group card-hover flex h-full min-h-72 flex-col justify-between rounded-[28px] border border-border bg-card p-10 md:p-14"
+        >
+          <p class="text-[13px] font-medium text-accent">Coverage</p>
+          <div>
+            <h3 class="text-4xl md:text-5xl">Fifteen counties. Three yards.</h3>
+            <p class="mt-4 text-muted-foreground">
+              Dublin · Cork Harbour · Galway — plus rotating field crews nationwide.
+            </p>
+          </div>
+          <span class="text-[15px] text-accent transition-transform duration-300 group-hover:translate-x-1">
+            See regions ›
+          </span>
+        </a>
+      </Reveal>
+      <Reveal delay={120} class="h-full">
+        <a
+          href="/process"
+          class="group card-hover flex h-full min-h-72 flex-col justify-between rounded-[28px] bg-primary p-10 md:p-14 text-primary-foreground"
+        >
+          <p class="text-[13px] font-medium text-accent">Workflow</p>
+          <div>
+            <h3 class="text-4xl md:text-5xl">Four steps. Zero surprises.</h3>
+            <p class="mt-4 text-primary-foreground/60">
+              Brief → site day → signed report → follow-up. Quoted times honoured.
+            </p>
+          </div>
+          <span class="text-[15px] text-accent transition-transform duration-300 group-hover:translate-x-1">
+            See process ›
+          </span>
+        </a>
+      </Reveal>
     </div>
   </section>
+
 </div>
