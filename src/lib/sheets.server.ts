@@ -1,7 +1,7 @@
 import type { Service } from '$lib/services';
 
 const SHEET_CSV = 'https://docs.google.com/spreadsheets/d/1RsgmK5VoY2uQI-636AXH2LvwBHGDDsyp76T1Cu1D37U/export?format=csv';
-const TTL = 60_000;
+const TTL = 5 * 60_000; // 5 minutes
 
 let cache: { data: Service[]; ts: number } | null = null;
 
